@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./agents.css";
+import "./about.css";
 
 /* ---------------------------- Icon components ---------------------------- */
 
@@ -34,19 +34,36 @@ const IconClose = (props) => (
   </svg>
 );
 
-const IconSearch = (props) => (
+const IconArrowRight = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-    <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-const IconChevronDown = (props) => (
+const IconBuilding = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <rect x="4" y="3" width="10" height="18" rx="1" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M14 8h6v13h-6" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    <path d="M7 7h1M11 7h1M7 11h1M11 11h1M7 15h1M11 15h1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
 
+const IconUsers = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" {...props}>
+    <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M3 19c.8-3 3-4.6 6-4.6s5.2 1.6 6 4.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M15 8.3a3 3 0 1 1 3.3 4.4M15.5 14.6c2.3.3 3.9 1.8 4.5 4.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconBadge = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" {...props}>
+    <circle cx="12" cy="9" r="5" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M9 13.5L7.5 21l4.5-2.5L16.5 21 15 13.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+  </svg>
+);
+
+/* footer icons */
 const IconPhone = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
     <path
@@ -106,52 +123,25 @@ const IconLinkedin = (props) => (
 
 /* --------------------------------- Data ---------------------------------- */
 
-const LOCATIONS = ["All Locations", "Lagos", "Abuja", "Port Harcourt", "Ibadan"];
-
-// Unsplash — free to use, no attribution required (Unsplash License)
-const AGENTS = [
-  {
-    name: "Emmanuel Okafor",
-    role: "Property Agent",
-    location: "Lagos",
-    phone: "+234 801 234 5678",
-    photo: "https://images.unsplash.com/photo-1614023342667-6f060e9d1e04?auto=format&fit=crop&w=300&h=300&q=70",
-  },
-  {
-    name: "Ngozi Eze",
-    role: "Property Agent",
-    location: "Abuja",
-    phone: "+234 803 456 7890",
-    photo: "https://images.unsplash.com/photo-1573496527892-904f897eb744?auto=format&fit=crop&w=300&h=300&q=70",
-  },
-  {
-    name: "Michael Shelby",
-    role: "Property Agent",
-    location: "Port Harcourt",
-    phone: "+234 706 123 4567",
-    photo: "https://images.unsplash.com/photo-1742518424481-b39a7cb4c80e?auto=format&fit=crop&w=300&h=300&q=70",
-  },
-  {
-    name: "Tolu Adeyemi",
-    role: "Property Agent",
-    location: "Ibadan",
-    phone: "+234 802 987 6543",
-    photo: "https://images.unsplash.com/photo-1573497161161-c3e73707e25c?auto=format&fit=crop&w=300&h=300&q=70",
-  },
+const STATS = [
+  { icon: IconBuilding, value: "10,000+", label: "Happy Clients" },
+  { icon: IconHouse, value: "5,000+", label: "Properties Listed" },
+  { icon: IconUsers, value: "50+", label: "Trusted Agents" },
+  { icon: IconBadge, value: "5", label: "Years of Excellence" },
 ];
 
-const HEADER_IMAGE = "https://images.unsplash.com/photo-1742518424481-b39a7cb4c80e?auto=format&fit=crop&w=1200&q=70";
+// Unsplash — free to use, no attribution required (Unsplash License)
+const HEADER_IMAGE = "https://images.unsplash.com/photo-1771627278473-fbe123ee865a?auto=format&fit=crop&w=1600&q=70";
+const STORY_IMAGE = "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=900&h=650&q=70";
+const CTA_IMAGE = "https://images.unsplash.com/photo-1738441611332-93237a80f57b?auto=format&fit=crop&w=1600&q=70";
 
-export default function Agents() {
+export default function About() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const routerLocation = useLocation();
 
   const isActive = (path) =>
     path === "/" ? routerLocation.pathname === "/" : routerLocation.pathname.startsWith(path);
-
-  const [query, setQuery] = useState("");
-  const [locationFilter, setLocationFilter] = useState("All Locations");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -165,17 +155,6 @@ export default function Agents() {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
-
-  const visibleAgents = useMemo(() => {
-    return AGENTS.filter((agent) => {
-      const matchesQuery =
-        query.trim() === "" ||
-        agent.name.toLowerCase().includes(query.trim().toLowerCase()) ||
-        agent.location.toLowerCase().includes(query.trim().toLowerCase());
-      const matchesLocation = locationFilter === "All Locations" || agent.location === locationFilter;
-      return matchesQuery && matchesLocation;
-    });
-  }, [query, locationFilter]);
 
   return (
     <div className="hv-page">
@@ -239,59 +218,61 @@ export default function Agents() {
 
       {/* ----------------------------- Page header ----------------------------- */}
       <section className="hv-page-header">
-        <img className="hv-page-header__bg" src={HEADER_IMAGE} alt="A Haven property agent" />
+        <img className="hv-page-header__bg" src={HEADER_IMAGE} alt="Bright, cozy living room interior" />
         <div className="hv-page-header__scrim" />
         <div className="hv-page-header__inner">
-          <h1>Our Trusted Agents</h1>
-          <p>Work with experienced and professional real estate agents who are committed to helping you find the perfect property.</p>
+          <h1>About Haven</h1>
+          <p>We make real estate simple, transparent and accessible for everyone.</p>
         </div>
       </section>
 
-      {/* ------------------------------- Directory ------------------------------- */}
-      <section className="hv-directory">
-        <div className="hv-container">
-          <div className="hv-directory__controls">
-            <div className="hv-directory__search">
-              <IconSearch width="16" height="16" />
-              <input
-                type="text"
-                placeholder="Search agents by name or location..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label="Search agents by name or location"
-              />
-            </div>
-            <div className="hv-directory__select">
-              <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} aria-label="Filter by location">
-                {LOCATIONS.map((loc) => (
-                  <option key={loc}>{loc}</option>
-                ))}
-              </select>
-              <IconChevronDown width="14" height="14" />
-            </div>
+      {/* -------------------------------- Story -------------------------------- */}
+      <section className="hv-story">
+        <div className="hv-container hv-story__grid">
+          <div className="hv-story__image">
+            <img src={STORY_IMAGE} alt="Modern house with pool and lounge chairs" />
           </div>
+          <div className="hv-story__content">
+            <h2>Our Story</h2>
+            <p>
+              Haven was founded with a simple mission — to help people find their dream homes without the stress. We
+              understand that real estate is more than just property, it's about building better lives.
+            </p>
+            <p>
+              We work with verified agents and trusted partners to ensure you get the best deals, whether you're
+              buying, selling, or renting.
+            </p>
+          </div>
+        </div>
 
-          {visibleAgents.length === 0 && (
-            <p className="hv-directory__empty">No agents match your search yet — try a different name or location.</p>
-          )}
-
-          <div className="hv-directory__grid">
-            {visibleAgents.map((agent) => (
-              <article className="hv-agent-card" key={agent.name}>
-                <div className="hv-agent-card__photo">
-                  <img src={agent.photo} alt={agent.name} />
-                </div>
-                <h3>{agent.name}</h3>
-                <p className="hv-agent-card__role">{agent.role}</p>
-                <p className="hv-agent-card__location">{agent.location}</p>
-                <p className="hv-agent-card__phone">
-                  <IconPhone width="14" height="14" /> {agent.phone}
-                </p>
-                <Link to="/agents" className="hv-btn hv-btn--outline-dark hv-agent-card__btn">
-                  View Profile
-                </Link>
-              </article>
+        <div className="hv-container">
+          <div className="hv-stats">
+            {STATS.map(({ icon: Icon, value, label }) => (
+              <div className="hv-stats__item" key={label}>
+                <span className="hv-stats__icon">
+                  <Icon width="20" height="20" />
+                </span>
+                <span className="hv-stats__value">{value}</span>
+                <span className="hv-stats__label">{label}</span>
+              </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------- CTA ---------------------------------- */}
+      <section className="hv-cta">
+        <div className="hv-container">
+          <div className="hv-cta__card">
+            <img className="hv-cta__bg" src={CTA_IMAGE} alt="Warm living room interior" />
+            <div className="hv-cta__scrim" />
+            <div className="hv-cta__inner">
+              <h2>Ready to find your dream home?</h2>
+              <p>Browse our listings today and take the first step towards your new home.</p>
+              <Link to="/properties" className="hv-btn hv-btn--primary hv-btn--icon">
+                Explore Properties <IconArrowRight width="16" height="16" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

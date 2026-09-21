@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./agents.css";
+import "./contact.css";
 
 /* ---------------------------- Icon components ---------------------------- */
 
@@ -34,16 +34,29 @@ const IconClose = (props) => (
   </svg>
 );
 
-const IconSearch = (props) => (
+const IconArrowRight = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-    <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-const IconChevronDown = (props) => (
+const IconCheck = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/* contact detail icons */
+const IconPin = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" {...props}>
+    <path
+      d="M12 21s7-6.3 7-11.5C19 5.9 15.9 3 12 3S5 5.9 5 9.5C5 14.7 12 21 12 21z"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinejoin="round"
+    />
+    <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" strokeWidth="1.6" />
   </svg>
 );
 
@@ -65,15 +78,11 @@ const IconMail = (props) => (
   </svg>
 );
 
-const IconPin = (props) => (
+const IconClock = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path
-      d="M12 21s7-6.3 7-11.5C19 5.9 15.9 3 12 3S5 5.9 5 9.5C5 14.7 12 21 12 21z"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-    <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" strokeWidth="1.6" />
+    <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M12 9v4l3 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9 2h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
 
@@ -106,52 +115,41 @@ const IconLinkedin = (props) => (
 
 /* --------------------------------- Data ---------------------------------- */
 
-const LOCATIONS = ["All Locations", "Lagos", "Abuja", "Port Harcourt", "Ibadan"];
-
-// Unsplash — free to use, no attribution required (Unsplash License)
-const AGENTS = [
+const CONTACT_DETAILS = [
   {
-    name: "Emmanuel Okafor",
-    role: "Property Agent",
-    location: "Lagos",
-    phone: "+234 801 234 5678",
-    photo: "https://images.unsplash.com/photo-1614023342667-6f060e9d1e04?auto=format&fit=crop&w=300&h=300&q=70",
+    icon: IconPin,
+    title: "Our Location",
+    lines: ["Plot 12, Admiralty Way,", "Lekki Phase 1, Lagos, Nigeria"],
   },
   {
-    name: "Ngozi Eze",
-    role: "Property Agent",
-    location: "Abuja",
-    phone: "+234 803 456 7890",
-    photo: "https://images.unsplash.com/photo-1573496527892-904f897eb744?auto=format&fit=crop&w=300&h=300&q=70",
+    icon: IconPhone,
+    title: "Phone",
+    lines: ["+234 801 234 5678", "+234 808 765 4321"],
   },
   {
-    name: "Michael Shelby",
-    role: "Property Agent",
-    location: "Port Harcourt",
-    phone: "+234 706 123 4567",
-    photo: "https://images.unsplash.com/photo-1742518424481-b39a7cb4c80e?auto=format&fit=crop&w=300&h=300&q=70",
+    icon: IconMail,
+    title: "Email",
+    lines: ["info@haven.ng", "support@haven.ng"],
   },
   {
-    name: "Tolu Adeyemi",
-    role: "Property Agent",
-    location: "Ibadan",
-    phone: "+234 802 987 6543",
-    photo: "https://images.unsplash.com/photo-1573497161161-c3e73707e25c?auto=format&fit=crop&w=300&h=300&q=70",
+    icon: IconClock,
+    title: "Business Hours",
+    lines: ["Mon – Fri: 8:00 AM – 6:00 PM", "Sat – Sun: 9:00 AM – 4:00 PM"],
   },
 ];
 
-const HEADER_IMAGE = "https://images.unsplash.com/photo-1742518424481-b39a7cb4c80e?auto=format&fit=crop&w=1200&q=70";
+const HEADER_IMAGE = "https://images.unsplash.com/photo-1706808849777-96e0d7be3bb7?auto=format&fit=crop&w=1600&q=70";
+const MAP_EMBED_SRC = "https://maps.google.com/maps?q=Lekki%20Phase%201%2C%20Lagos%2C%20Nigeria&z=14&output=embed";
 
-export default function Agents() {
+export default function Contact() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
   const routerLocation = useLocation();
 
   const isActive = (path) =>
     path === "/" ? routerLocation.pathname === "/" : routerLocation.pathname.startsWith(path);
-
-  const [query, setQuery] = useState("");
-  const [locationFilter, setLocationFilter] = useState("All Locations");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -166,16 +164,16 @@ export default function Agents() {
     };
   }, [menuOpen]);
 
-  const visibleAgents = useMemo(() => {
-    return AGENTS.filter((agent) => {
-      const matchesQuery =
-        query.trim() === "" ||
-        agent.name.toLowerCase().includes(query.trim().toLowerCase()) ||
-        agent.location.toLowerCase().includes(query.trim().toLowerCase());
-      const matchesLocation = locationFilter === "All Locations" || agent.location === locationFilter;
-      return matchesQuery && matchesLocation;
-    });
-  }, [query, locationFilter]);
+  const handleChange = (field) => (e) => {
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: wire this up to your actual form endpoint / email service.
+    setSubmitted(true);
+    setForm({ name: "", email: "", message: "" });
+  };
 
   return (
     <div className="hv-page">
@@ -239,59 +237,111 @@ export default function Agents() {
 
       {/* ----------------------------- Page header ----------------------------- */}
       <section className="hv-page-header">
-        <img className="hv-page-header__bg" src={HEADER_IMAGE} alt="A Haven property agent" />
+        <img className="hv-page-header__bg" src={HEADER_IMAGE} alt="Modern residential estate at dusk" />
         <div className="hv-page-header__scrim" />
         <div className="hv-page-header__inner">
-          <h1>Our Trusted Agents</h1>
-          <p>Work with experienced and professional real estate agents who are committed to helping you find the perfect property.</p>
+          <h1>Get in Touch</h1>
+          <p>We'd love to hear from you. Send us a message or visit our office for more information.</p>
         </div>
       </section>
 
-      {/* ------------------------------- Directory ------------------------------- */}
-      <section className="hv-directory">
-        <div className="hv-container">
-          <div className="hv-directory__controls">
-            <div className="hv-directory__search">
-              <IconSearch width="16" height="16" />
-              <input
-                type="text"
-                placeholder="Search agents by name or location..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label="Search agents by name or location"
-              />
-            </div>
-            <div className="hv-directory__select">
-              <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} aria-label="Filter by location">
-                {LOCATIONS.map((loc) => (
-                  <option key={loc}>{loc}</option>
-                ))}
-              </select>
-              <IconChevronDown width="14" height="14" />
-            </div>
+      {/* --------------------------------- Content --------------------------------- */}
+      <section className="hv-contact">
+        <div className="hv-container hv-contact__grid">
+          {/* ------------------------------- Get in touch ------------------------------- */}
+          <div className="hv-touch">
+            <ul className="hv-touch__list">
+              {CONTACT_DETAILS.map(({ icon: Icon, title, lines }) => (
+                <li key={title}>
+                  <span className="hv-touch__icon">
+                    <Icon width="18" height="18" />
+                  </span>
+                  <div>
+                    <h3>{title}</h3>
+                    {lines.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {visibleAgents.length === 0 && (
-            <p className="hv-directory__empty">No agents match your search yet — try a different name or location.</p>
-          )}
+          {/* -------------------------------- Message form -------------------------------- */}
+          <div className="hv-message">
+            <h2>Send Us a Message</h2>
+            <p className="hv-message__intro">Fill out the form below and we'll get back to you soon.</p>
 
-          <div className="hv-directory__grid">
-            {visibleAgents.map((agent) => (
-              <article className="hv-agent-card" key={agent.name}>
-                <div className="hv-agent-card__photo">
-                  <img src={agent.photo} alt={agent.name} />
-                </div>
-                <h3>{agent.name}</h3>
-                <p className="hv-agent-card__role">{agent.role}</p>
-                <p className="hv-agent-card__location">{agent.location}</p>
-                <p className="hv-agent-card__phone">
-                  <IconPhone width="14" height="14" /> {agent.phone}
-                </p>
-                <Link to="/agents" className="hv-btn hv-btn--outline-dark hv-agent-card__btn">
-                  View Profile
-                </Link>
-              </article>
-            ))}
+            {submitted && (
+              <div className="hv-message__success" role="status">
+                <IconCheck width="20" height="20" />
+                <span>Thanks — your message has been sent. We'll get back to you soon.</span>
+              </div>
+            )}
+
+            <form className="hv-form" onSubmit={handleSubmit}>
+              <div className="hv-form__field">
+                <label htmlFor="name">Full Name</label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  value={form.name}
+                  onChange={handleChange("name")}
+                  required
+                />
+              </div>
+
+              <div className="hv-form__field">
+                <label htmlFor="email">Email Address</label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange("email")}
+                  required
+                />
+              </div>
+
+              <div className="hv-form__field">
+                <label htmlFor="message">Message</label>
+                <textarea
+                  id="message"
+                  rows={5}
+                  placeholder="How can we help you?"
+                  value={form.message}
+                  onChange={handleChange("message")}
+                  required
+                />
+              </div>
+
+              <button type="submit" className="hv-btn hv-btn--primary hv-form__submit">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* ----------------------------------- Map ----------------------------------- */}
+        <div className="hv-container">
+          <div className="hv-map">
+            <iframe
+              title="Haven office location"
+              src={MAP_EMBED_SRC}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+            <div className="hv-map__label">
+              <span>Lagos, Nigeria</span>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Lekki+Phase+1+Lagos+Nigeria"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View Larger Map <IconArrowRight width="13" height="13" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
