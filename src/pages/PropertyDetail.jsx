@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { PROPERTIES } from "../data/properties";
-import "./home.css";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { getPropertyById, PROPERTIES } from "../data/properties";
+import "./propertyDetail.css";
 
 /* ---------------------------- Icon components ---------------------------- */
 
@@ -35,10 +35,18 @@ const IconClose = (props) => (
   </svg>
 );
 
-const IconSearch = (props) => (
+const IconArrowLeft = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-    <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconShare = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" {...props}>
+    <circle cx="18" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+    <circle cx="6" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+    <circle cx="18" cy="19" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
 
@@ -51,24 +59,6 @@ const IconPin = (props) => (
       strokeLinejoin="round"
     />
     <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" strokeWidth="1.6" />
-  </svg>
-);
-
-const IconTag = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path
-      d="M11.5 3.5H5a1.5 1.5 0 0 0-1.5 1.5v6.5a1.5 1.5 0 0 0 .44 1.06l9 9a1.5 1.5 0 0 0 2.12 0l6.5-6.5a1.5 1.5 0 0 0 0-2.12l-9-9a1.5 1.5 0 0 0-1.06-.44z"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-    <circle cx="8" cy="8" r="1.3" fill="currentColor" />
-  </svg>
-);
-
-const IconArrowRight = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -95,46 +85,12 @@ const IconRuler = (props) => (
   </svg>
 );
 
-/* trust badge icons */
-const IconUserCheck = (props) => (
+const IconCheck = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <circle cx="10" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.6" />
-    <path d="M4 19c.9-3 3-4.6 6-4.6s5.1 1.6 6 4.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M16 9l1.5 1.5L21 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-const IconShield = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path
-      d="M12 3l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V6l7-3z"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-    <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-const IconGrid = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <rect x="3.5" y="3.5" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-    <rect x="13.5" y="3.5" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-    <rect x="3.5" y="13.5" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-    <rect x="13.5" y="13.5" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-  </svg>
-);
-
-const IconHeadset = (props) => (
-  <svg viewBox="0 0 24 24" fill="none" {...props}>
-    <path d="M4 13v-1a8 8 0 0 1 16 0v1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    <rect x="3" y="13" width="4" height="6" rx="1.4" stroke="currentColor" strokeWidth="1.6" />
-    <rect x="17" y="13" width="4" height="6" rx="1.4" stroke="currentColor" strokeWidth="1.6" />
-    <path d="M19 19v.5a3 3 0 0 1-3 3h-3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-  </svg>
-);
-
-/* footer icons */
 const IconPhone = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
     <path
@@ -150,6 +106,20 @@ const IconMail = (props) => (
   <svg viewBox="0 0 24 24" fill="none" {...props}>
     <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.6" />
     <path d="M3.5 6.5L12 13l8.5-6.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconSearch = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" {...props}>
+    <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+    <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+const IconCalendar = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" {...props}>
+    <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M4 9.5h16M8 3v4M16 3v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
 
@@ -180,68 +150,21 @@ const IconLinkedin = (props) => (
   </svg>
 );
 
-/* --------------------------------- Data ---------------------------------- */
+const MAP_EMBED_SRC = (location) =>
+  `https://maps.google.com/maps?q=${encodeURIComponent(location)}&z=14&output=embed`;
 
-const TRUST_BADGES = [
-  { icon: IconUserCheck, title: "Trusted Agents", text: "Verified & professional" },
-  { icon: IconShield, title: "Secure Transactions", text: "Your safety matters" },
-  { icon: IconGrid, title: "Wide Selection", text: "Homes for every budget" },
-  { icon: IconHeadset, title: "24/7 Support", text: "We're always here" },
-];
+export default function PropertyDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const property = getPropertyById(id);
 
-// Unsplash — free to use, no attribution required (Unsplash License)
-// const FEATURED_PROPERTIES = [
-//   {
-//     title: "Luxury 5 Bedroom Duplex",
-//     status: "For Sale",
-//     location: "Lekki Phase 1, Lagos",
-//     price: "₦350,000,000",
-//     beds: 5,
-//     baths: 5,
-//     sqft: "4,500",
-//     image: "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=500&h=380&q=70",
-//   },
-//   {
-//     title: "3 Bedroom Apartment",
-//     status: "For Sale",
-//     location: "Ikoyi, Lagos",
-//     price: "₦120,000,000",
-//     beds: 3,
-//     baths: 3,
-//     sqft: "2,200",
-//     image: "https://images.unsplash.com/photo-1706808849803-f61304e024ab?auto=format&fit=crop&w=500&h=380&q=70",
-//   },
-//   {
-//     title: "2 Bedroom Flat",
-//     status: "For Rent",
-//     location: "Victoria Island, Lagos",
-//     price: "₦2,500,000 / year",
-//     beds: 2,
-//     baths: 2,
-//     sqft: "1,500",
-//     image: "https://images.unsplash.com/photo-1706808849802-8f876ade0d1f?auto=format&fit=crop&w=500&h=380&q=70",
-//   },
-//   {
-//     title: "4 Bedroom Terrace Duplex",
-//     status: "For Sale",
-//     location: "Chevron, Lagos",
-//     price: "₦180,000,000",
-//     beds: 4,
-//     baths: 2,
-//     sqft: "2,200",
-//     image: "https://images.unsplash.com/photo-1706808849827-7366c098b317?auto=format&fit=crop&w=500&h=380&q=70",
-//   },
-// ];
-
-const HERO_IMAGE = "https://images.unsplash.com/photo-1706808849777-96e0d7be3bb7?auto=format&fit=crop&w=1600&q=70";
-
-export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const [activeImage, setActiveImage] = useState(0);
+  const routerLocation = useLocation();
 
   const isActive = (path) =>
-    path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+    path === "/" ? routerLocation.pathname === "/" : routerLocation.pathname.startsWith(path);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -255,6 +178,31 @@ export default function Home() {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+
+  useEffect(() => {
+    setActiveImage(0);
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (!property) {
+    return (
+      <div className="hv-page">
+        <div className="hv-container hv-not-found">
+          <h1>Property not found</h1>
+          <p>This listing may have been removed or the link is incorrect.</p>
+          <Link to="/properties" className="hv-btn hv-btn--primary">
+            Back to Properties
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const extraPhotoCount = property.gallery.length > 4 ? property.gallery.length - 3 : 0;
+  const [featuresLeft, featuresRight] = [
+    property.features.slice(0, Math.ceil(property.features.length / 2)),
+    property.features.slice(Math.ceil(property.features.length / 2)),
+  ];
 
   return (
     <div className="hv-page">
@@ -316,110 +264,173 @@ export default function Home() {
         onClick={() => setMenuOpen(false)}
       />
 
-      {/* --------------------------------- Hero --------------------------------- */}
-      <section className="hv-hero">
-        <img className="hv-hero__bg" src={HERO_IMAGE} alt="Modern luxury home with a pool at dusk" />
-        <div className="hv-hero__scrim" />
-        <div className="hv-hero__inner">
-          <p className="hv-hero__eyebrow hv-anim hv-anim--1">
-            <IconHouse width="14" height="14" /> Find Your Next Home
-          </p>
-          <h1 className="hv-hero__title hv-anim hv-anim--2">
-            Discover the Perfect Property for Your <span className="hv-hero__accent">Lifestyle</span>
-          </h1>
-          <p className="hv-hero__text hv-anim hv-anim--3">
-            Browse through our curated selection of premium properties in the best locations. Buy, rent, or invest
-            with confidence.
-          </p>
-
-          <div className="hv-search hv-anim hv-anim--4">
-            <div className="hv-search__field">
-              <IconPin width="16" height="16" />
-              <div>
-                <span className="hv-search__label">Location</span>
-                <span className="hv-search__value">Lagos, Nigeria</span>
-              </div>
+      {/* ------------------------------- Content ------------------------------- */}
+      <section className="hv-detail">
+        <div className="hv-container">
+          <div className="hv-detail__topbar">
+            <button className="hv-back-link" onClick={() => navigate(-1)}>
+              <IconArrowLeft width="16" height="16" /> Back to properties
+            </button>
+            <div className="hv-detail__topbar-actions">
+              <button className="hv-icon-btn hv-icon-btn--light" aria-label="Share property">
+                <IconShare width="17" height="17" />
+              </button>
+              <button className="hv-icon-btn hv-icon-btn--light" aria-label="Save property">
+                <IconHeart width="17" height="17" />
+              </button>
             </div>
-            <div className="hv-search__divider" />
-            <div className="hv-search__field">
-              <IconHouse width="16" height="16" />
-              <div>
-                <span className="hv-search__label">Property Type</span>
-                <span className="hv-search__value">Any Type</span>
-              </div>
-            </div>
-            <div className="hv-search__divider" />
-            <div className="hv-search__field">
-              <IconTag width="16" height="16" />
-              <div>
-                <span className="hv-search__label">Price Range</span>
-                <span className="hv-search__value">Any Price</span>
-              </div>
-            </div>
-            <Link to="/properties" className="hv-btn hv-btn--primary hv-search__btn">
-              <IconSearch width="16" height="16" /> Search
-            </Link>
           </div>
 
-          <div className="hv-trust hv-anim hv-anim--5">
-            {TRUST_BADGES.map(({ icon: Icon, title, text }) => (
-              <div className="hv-trust__item" key={title}>
-                <span className="hv-trust__icon">
-                  <Icon width="18" height="18" />
+          {/* -------------------------------- Gallery -------------------------------- */}
+          <div className="hv-gallery">
+            <div className="hv-gallery__main">
+              <img src={property.gallery[activeImage]} alt={property.title} />
+            </div>
+            <div className="hv-gallery__thumbs">
+              {property.gallery.slice(1, 4).map((src, i) => {
+                const isLast = i === 2 && extraPhotoCount > 0;
+                return (
+                  <button
+                    key={src}
+                    className="hv-gallery__thumb"
+                    onClick={() => setActiveImage(i + 1)}
+                  >
+                    <img src={src} alt={`${property.title} view ${i + 2}`} />
+                    {isLast && <span className="hv-gallery__more">+{extraPhotoCount}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* --------------------------------- Body --------------------------------- */}
+          <div className="hv-detail__grid">
+            <div className="hv-detail__main">
+              <div className="hv-detail__heading">
+                <h1>{property.title}</h1>
+                <span className={`hv-badge ${property.status === "For Rent" ? "hv-badge--rent" : ""}`}>
+                  {property.status}
                 </span>
-                <div>
-                  <strong>{title}</strong>
-                  <span>{text}</span>
+              </div>
+              <p className="hv-detail__location">
+                <IconPin width="14" height="14" /> {property.location}
+              </p>
+
+              <div className="hv-detail__price-row">
+                <span className="hv-detail__price">{property.price}</span>
+                <span className="hv-detail__meta">
+                  <span><IconBed width="15" height="15" /> {property.beds} Beds</span>
+                  <span><IconBath width="15" height="15" /> {property.baths} Baths</span>
+                  <span><IconRuler width="15" height="15" /> {property.sqft} sqft</span>
+                </span>
+              </div>
+
+              <p className="hv-detail__description">{property.description}</p>
+
+              <div className="hv-detail__features">
+                <h2>Property Features</h2>
+                <div className="hv-features__grid">
+                  <ul>
+                    {featuresLeft.map((f) => (
+                      <li key={f}>
+                        <IconCheck width="15" height="15" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <ul>
+                    {featuresRight.map((f) => (
+                      <li key={f}>
+                        <IconCheck width="15" height="15" /> {f}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------ Featured ------------------------------ */}
-      <section className="hv-featured">
-        <div className="hv-container">
-          <div className="hv-featured__head">
-            <div>
-              <h2>Featured Properties</h2>
-              <p>Handpicked properties, just for you.</p>
             </div>
-            <Link to="/properties" className="hv-link-arrow">
-              View All Properties <IconArrowRight width="14" height="14" />
-            </Link>
+
+            {/* -------------------------------- Sidebar -------------------------------- */}
+            <aside className="hv-detail__sidebar">
+              <div className="hv-agent-card">
+                <h3>Interested in this property?</h3>
+                <p>Get in touch with the agent for more details or to schedule a viewing.</p>
+
+                <div className="hv-agent-card__profile">
+                  <img src={property.agent.photo} alt={property.agent.name} />
+                  <div>
+                    <strong>{property.agent.name}</strong>
+                    <span>{property.agent.role}</span>
+                  </div>
+                </div>
+
+                <ul className="hv-agent-card__contact">
+                  <li>
+                    <IconPhone width="14" height="14" /> {property.agent.phone}
+                  </li>
+                  <li>
+                    <IconMail width="14" height="14" /> {property.agent.email}
+                  </li>
+                </ul>
+
+                <a href={`tel:${property.agent.phone.replace(/\s/g, "")}`} className="hv-btn hv-btn--primary hv-agent-card__btn">
+                  <IconSearch width="15" height="15" /> Contact Agent
+                </a>
+                <Link to="/contact" className="hv-btn hv-btn--outline-dark hv-agent-card__btn">
+                  <IconCalendar width="15" height="15" /> Schedule Viewing
+                </Link>
+              </div>
+
+              <div className="hv-map-card">
+                <div className="hv-map-card__frame">
+                  <iframe
+                    title="Property location"
+                    src={MAP_EMBED_SRC(property.location)}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+                <div className="hv-map-card__body">
+                  <span>{property.location}</span>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View on Map →
+                  </a>
+                </div>
+              </div>
+            </aside>
           </div>
 
-          <div className="hv-featured__grid">
-            {PROPERTIES.slice(0, 4).map((property) => (
-                <Link to={`/properties/${property.id}`} className="hv-property-card" key={property.id}>
+          {/* ---------------------------- Similar properties --------------------------- */}
+          <div className="hv-similar">
+            <h2>Similar Properties</h2>
+            <div className="hv-similar__grid">
+              {PROPERTIES.filter((p) => p.id !== property.id && p.type === property.type)
+                .slice(0, 3)
+                .map((p) => (
+                  <Link to={`/properties/${p.id}`} className="hv-property-card" key={p.id}>
                     <div className="hv-property-card__image">
-                    <span className={`hv-badge ${property.status === "For Rent" ? "hv-badge--rent" : ""}`}>
-                        {property.status}
-                    </span>
-                    <button
-                        className="hv-property-card__fav"
-                        aria-label="Save property"
-                        onClick={(e) => e.preventDefault()}
-                    >
-                        <IconHeart width="16" height="16" />
-                    </button>
-                    <img src={property.image} alt={property.title} />
+                      <span className={`hv-badge ${p.status === "For Rent" ? "hv-badge--rent" : ""}`}>
+                        {p.status}
+                      </span>
+                      <img src={p.image} alt={p.title} />
                     </div>
                     <div className="hv-property-card__body">
-                    <h3>{property.title}</h3>
-                    <p className="hv-property-card__location">
-                        <IconPin width="13" height="13" /> {property.location}
-                    </p>
-                    <p className="hv-property-card__price">{property.price}</p>
-                    <div className="hv-property-card__meta">
-                        <span><IconBed width="14" height="14" /> {property.beds}</span>
-                        <span><IconBath width="14" height="14" /> {property.baths}</span>
-                        <span><IconRuler width="14" height="14" /> {property.sqft} sqft</span>
+                      <h3>{p.title}</h3>
+                      <p className="hv-property-card__location">
+                        <IconPin width="13" height="13" /> {p.location}
+                      </p>
+                      <p className="hv-property-card__price">{p.price}</p>
+                      <div className="hv-property-card__meta">
+                        <span><IconBed width="14" height="14" /> {p.beds}</span>
+                        <span><IconBath width="14" height="14" /> {p.baths}</span>
+                        <span><IconRuler width="14" height="14" /> {p.sqft} sqft</span>
+                      </div>
                     </div>
-                    </div>
-                </Link>
-            ))}
+                  </Link>
+                ))}
+            </div>
           </div>
         </div>
       </section>

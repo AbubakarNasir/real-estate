@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { PROPERTIES } from "../data/properties";
 import "./properties.css";
 
 /* ---------------------------- Icon components ---------------------------- */
@@ -142,86 +143,86 @@ const BEDROOM_OPTIONS = ["1+", "2+", "3+", "4+", "5+"];
 const SORT_OPTIONS = ["Newest First", "Price: Low to High", "Price: High to Low"];
 
 // Unsplash — free to use, no attribution required (Unsplash License)
-const PROPERTIES = [
-  {
-    title: "Luxury 5 Bedroom Duplex",
-    status: "For Sale",
-    location: "Lekki Phase 1, Lagos",
-    city: "Lagos",
-    type: "House",
-    price: "₦350,000,000",
-    priceValue: 350000000,
-    beds: 5,
-    baths: 5,
-    sqft: "4,500",
-    image: "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=500&h=380&q=70",
-  },
-  {
-    title: "4 Bedroom Terrace Duplex",
-    status: "For Sale",
-    location: "Chevron, Lagos",
-    city: "Lagos",
-    type: "House",
-    price: "₦180,000,000",
-    priceValue: 180000000,
-    beds: 4,
-    baths: 4,
-    sqft: "2,200",
-    image: "https://images.unsplash.com/photo-1706808849827-7366c098b317?auto=format&fit=crop&w=500&h=380&q=70",
-  },
-  {
-    title: "3 Bedroom Apartment",
-    status: "For Rent",
-    location: "Ikoyi, Lagos",
-    city: "Lagos",
-    type: "Apartment",
-    price: "₦2,000,000 / year",
-    priceValue: 2000000,
-    beds: 3,
-    baths: 3,
-    sqft: "2,200",
-    image: "https://images.unsplash.com/photo-1706808849803-f61304e024ab?auto=format&fit=crop&w=500&h=380&q=70",
-  },
-  {
-    title: "5 Bedroom Detached Duplex",
-    status: "For Sale",
-    location: "Magodo, Lagos",
-    city: "Lagos",
-    type: "House",
-    price: "₦280,000,000",
-    priceValue: 280000000,
-    beds: 5,
-    baths: 4,
-    sqft: "4,000",
-    image: "https://images.unsplash.com/photo-1706164971298-7d210902ec42?auto=format&fit=crop&w=500&h=380&q=70",
-  },
-  {
-    title: "2 Bedroom Apartment",
-    status: "For Sale",
-    location: "Yaba, Lagos",
-    city: "Lagos",
-    type: "Apartment",
-    price: "₦95,000,000",
-    priceValue: 95000000,
-    beds: 2,
-    baths: 2,
-    sqft: "1,400",
-    image: "https://images.unsplash.com/photo-1706808849802-8f876ade0d1f?auto=format&fit=crop&w=500&h=380&q=70",
-  },
-  {
-    title: "3 Bedroom Duplex",
-    status: "For Rent",
-    location: "Lekki Phase 1, Lagos",
-    city: "Lagos",
-    type: "House",
-    price: "₦3,500,000 / year",
-    priceValue: 3500000,
-    beds: 3,
-    baths: 3,
-    sqft: "2,800",
-    image: "https://images.unsplash.com/photo-1686164748261-33e13eef70b6?auto=format&fit=crop&w=500&h=380&q=70",
-  },
-];
+// const PROPERTIES = [
+//   {
+//     title: "Luxury 5 Bedroom Duplex",
+//     status: "For Sale",
+//     location: "Lekki Phase 1, Lagos",
+//     city: "Lagos",
+//     type: "House",
+//     price: "₦350,000,000",
+//     priceValue: 350000000,
+//     beds: 5,
+//     baths: 5,
+//     sqft: "4,500",
+//     image: "https://images.unsplash.com/photo-1706808849780-7a04fbac83ef?auto=format&fit=crop&w=500&h=380&q=70",
+//   },
+//   {
+//     title: "4 Bedroom Terrace Duplex",
+//     status: "For Sale",
+//     location: "Chevron, Lagos",
+//     city: "Lagos",
+//     type: "House",
+//     price: "₦180,000,000",
+//     priceValue: 180000000,
+//     beds: 4,
+//     baths: 4,
+//     sqft: "2,200",
+//     image: "https://images.unsplash.com/photo-1706808849827-7366c098b317?auto=format&fit=crop&w=500&h=380&q=70",
+//   },
+//   {
+//     title: "3 Bedroom Apartment",
+//     status: "For Rent",
+//     location: "Ikoyi, Lagos",
+//     city: "Lagos",
+//     type: "Apartment",
+//     price: "₦2,000,000 / year",
+//     priceValue: 2000000,
+//     beds: 3,
+//     baths: 3,
+//     sqft: "2,200",
+//     image: "https://images.unsplash.com/photo-1706808849803-f61304e024ab?auto=format&fit=crop&w=500&h=380&q=70",
+//   },
+//   {
+//     title: "5 Bedroom Detached Duplex",
+//     status: "For Sale",
+//     location: "Magodo, Lagos",
+//     city: "Lagos",
+//     type: "House",
+//     price: "₦280,000,000",
+//     priceValue: 280000000,
+//     beds: 5,
+//     baths: 4,
+//     sqft: "4,000",
+//     image: "https://images.unsplash.com/photo-1706164971298-7d210902ec42?auto=format&fit=crop&w=500&h=380&q=70",
+//   },
+//   {
+//     title: "2 Bedroom Apartment",
+//     status: "For Sale",
+//     location: "Yaba, Lagos",
+//     city: "Lagos",
+//     type: "Apartment",
+//     price: "₦95,000,000",
+//     priceValue: 95000000,
+//     beds: 2,
+//     baths: 2,
+//     sqft: "1,400",
+//     image: "https://images.unsplash.com/photo-1706808849802-8f876ade0d1f?auto=format&fit=crop&w=500&h=380&q=70",
+//   },
+//   {
+//     title: "3 Bedroom Duplex",
+//     status: "For Rent",
+//     location: "Lekki Phase 1, Lagos",
+//     city: "Lagos",
+//     type: "House",
+//     price: "₦3,500,000 / year",
+//     priceValue: 3500000,
+//     beds: 3,
+//     baths: 3,
+//     sqft: "2,800",
+//     image: "https://images.unsplash.com/photo-1686164748261-33e13eef70b6?auto=format&fit=crop&w=500&h=380&q=70",
+//   },
+// ];
 
 const HEADER_IMAGE = "https://images.unsplash.com/photo-1706808849777-96e0d7be3bb7?auto=format&fit=crop&w=1600&q=70";
 
@@ -506,31 +507,35 @@ export default function Properties() {
             )}
 
             <div className="hv-results__grid">
-              {visibleProperties.map((property) => (
-                <article className="hv-property-card" key={property.title}>
-                  <div className="hv-property-card__image">
-                    <span className={`hv-badge ${property.status === "For Rent" ? "hv-badge--rent" : ""}`}>
-                      {property.status}
-                    </span>
-                    <button className="hv-property-card__fav" aria-label="Save property">
-                      <IconHeart width="16" height="16" />
-                    </button>
-                    <img src={property.image} alt={property.title} />
-                  </div>
-                  <div className="hv-property-card__body">
-                    <h3>{property.title}</h3>
-                    <p className="hv-property-card__location">
-                      <IconPin width="13" height="13" /> {property.location}
-                    </p>
-                    <p className="hv-property-card__price">{property.price}</p>
-                    <div className="hv-property-card__meta">
-                      <span><IconBed width="14" height="14" /> {property.beds}</span>
-                      <span><IconBath width="14" height="14" /> {property.baths}</span>
-                      <span><IconRuler width="14" height="14" /> {property.sqft} sqft</span>
-                    </div>
-                  </div>
-                </article>
-              ))}
+                {visibleProperties.map((property) => (
+                    <Link to={`/properties/${property.id}`} className="hv-property-card" key={property.id}>
+                        <div className="hv-property-card__image">
+                        <span className={`hv-badge ${property.status === "For Rent" ? "hv-badge--rent" : ""}`}>
+                            {property.status}
+                        </span>
+                        <button
+                            className="hv-property-card__fav"
+                            aria-label="Save property"
+                            onClick={(e) => e.preventDefault()}
+                        >
+                            <IconHeart width="16" height="16" />
+                        </button>
+                        <img src={property.image} alt={property.title} />
+                        </div>
+                        <div className="hv-property-card__body">
+                        <h3>{property.title}</h3>
+                        <p className="hv-property-card__location">
+                            <IconPin width="13" height="13" /> {property.location}
+                        </p>
+                        <p className="hv-property-card__price">{property.price}</p>
+                        <div className="hv-property-card__meta">
+                            <span><IconBed width="14" height="14" /> {property.beds}</span>
+                            <span><IconBath width="14" height="14" /> {property.baths}</span>
+                            <span><IconRuler width="14" height="14" /> {property.sqft} sqft</span>
+                        </div>
+                        </div>
+                    </Link>
+                ))}
             </div>
           </div>
         </div>
